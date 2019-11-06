@@ -72,6 +72,27 @@ echo "/data/backups/bidule1   192.168.0.253(no_root_squash,insecure,rw)" | sudo 
 echo "/data/partages/bidule1  192.168.0.253(no_root_squash,insecure,rw)" | sudo tee -a /etc/exports
 # sudo exportfs -a
 
-# installation de raspi-backup
-https://bit.ly/2PNUgem
+# --- Installation de raspi-backup
+# ref: https://bit.ly/2PNUgem
+curl -sSLO https://www.linux-tips-and-tricks.de/raspiBackupInstallUI.sh && sudo bash ./raspiBackupInstallUI.sh
+# configurer pour utiliser /data/backups comme path de destinations (il créera le sous-répertoire bidule3)
+
+# --- Installation de NextCloudPi
+cd
+curl -sSL https://raw.githubusercontent.com/nextcloud/nextcloudpi/master/install.sh > nextcloudpi-install.sh
+sudo bash ./nextcloudpi-install.sh
+
+# ensuite:
+#First: Visit https://192.168.0.254/  https://nextcloudpi.local/ (also https://nextcloudpi.lan/ or https://nextcloudpi/ on windows and mac)
+#to activate your instance of NC, and save the auto generated passwords. You may review or reset them
+#anytime by using nc-admin and nc-passwd.
+#Second: Type 'sudo ncp-config' to further configure NCP, or access ncp-web on https://192.168.0.254:4443/
+#Note: You will have to add an exception, to bypass your browser warning when you
+#first load the activation and :4443 pages. You can run letsencrypt to get rid of
+#the warning if you have a (sub)domain available.
+
+# --- shell script to automatically issue & renew the free certificates from Let's Encrypt
+# ref: https://bit.ly/2Nm85Pq et https://bit.ly/2CiLXPF
+curl https://get.acme.sh | sh
+
 # ---
