@@ -72,5 +72,6 @@ echo "/data/backups/bidule1   192.168.0.253(no_root_squash,insecure,rw)" | sudo 
 echo "/data/partages/bidule1  192.168.0.253(no_root_squash,insecure,rw)" | sudo tee -a /etc/exports
 # sudo exportfs -a
 
-
+# installation de raspi-backup
+https://bit.ly/2PNUgem
 # ---
