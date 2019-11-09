@@ -33,7 +33,7 @@ echo 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCqz35tveThInSFi4ptaMkVKoxHrsxhUDb9xC
 # --- Installation de Webmin
 cd
 sudo apt-get install -y perl libnet-ssleay-perl openssl libauthen-pam-perl libpam-runtime libio-pty-perl apt-show-versions python
-wget http://prdownloads.sourcefsudo apt-get install nfs-kernel-server -yorge.net/webadmin/webmin_1.930_all.deb
+wget http://prdownloads.sourceforge.net/webadmin/webmin_1.930_all.deb
 sudo dpkg --install webmin_1.930_all.deb
 
 # --- Installation NFS Server
