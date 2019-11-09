@@ -44,8 +44,8 @@ sudo apt-get install -y xfsprogs
 
 # --- Partionnage et formattage du disque SSD
 # fdisk créer partition 1 = 16gb, partition 2 = reste
-sudo mkfs -t ext4 -L rootfs /dev/sda1
-sudo mkfs -t xfs  -L data   /dev/sda2
+sudo mkfs -t ext4  -L rootfs /dev/sda1
+sudo mkfs -t btrfs -L data   /dev/sda2
 
 PARTUUID1=$(lsblk -o PARTUUID /dev/sda1 | tail -n1 | awk '{print $1}')
 PARTUUID2=$(lsblk -o PARTUUID /dev/sda2 | tail -n1 | awk '{print $1}')
@@ -67,7 +67,7 @@ echo "PARTUUID=$PARTUUID2  /data    xfs     rw,relatime,attr2,inode64,noquota 0 
 # on attends le prochain redémarrage pour monter /data
 
 # --- Préparation du disque /data et shares NFS
-sudo mkdir -p /data/backups/bidule1 /data/partages/bidule1
+sudo mkdir -p /data/backups/bidule1 /data/partages/bidule1 /data/backups/bidule3 /data/backups/ncp /data/nextcloud
 echo "/data/backups/bidule1   192.168.0.253(no_root_squash,insecure,rw)" | sudo tee -a /etc/exports
 echo "/data/partages/bidule1  192.168.0.253(no_root_squash,insecure,rw)" | sudo tee -a /etc/exports
 # sudo exportfs -a
