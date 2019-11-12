@@ -82,6 +82,18 @@ cd
 curl -sSL https://raw.githubusercontent.com/nextcloud/nextcloudpi/master/install.sh > nextcloudpi-install.sh
 sudo bash ./nextcloudpi-install.sh
 
+# --- Dynamic DNS setup avec noip
+cd /home/pi
+mkdir noip
+cd noip/
+wget https://www.noip.com/client/linux/noip-duc-linux.tar.gz
+tar xvzf noip-duc-linux.tar.gz
+cd noip-2.1.9-1/
+sudo make
+sudo make install
+
+# --- rootCA et certificat pour bidule3
+# voir https://stackoverflow.com/questions/991758/how-to-get-pem-file-from-key-and-crt-files 
 # ensuite:
 #First: Visit https://192.168.0.254/  https://nextcloudpi.local/ (also https://nextcloudpi.lan/ or https://nextcloudpi/ on windows and mac)
 #to activate your instance of NC, and save the auto generated passwords. You may review or reset them
