@@ -119,6 +119,29 @@ systemctl status noip2
 # --- rootCA et certificat pour bidule3
 # voir https://stackoverflow.com/questions/991758/how-to-get-pem-file-from-key-and-crt-files 
 # https://gist.github.com/fntlnz/cf14feb5a46b2eda428e000157447309
+
+cd
+# root Certificat
+mkdir -p certificats/rootCa
+cd certificats/rootCA
+openssl genrsa -des3 -out rootCA.key 4096
+openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 1024 -out rootCA.crt
+cat rootCA.crt rootCA.key > rootCA.pem
+
+# certificat de bidule3
+openssl genrsa -out bidule3.ddns.net.key 2048
+openssl req -new -key bidule3.ddns.net.key -out bidule3.ddns.net.csr
+openssl req -in bidule3.ddns.net.csr -noout -text
+openssl x509 -req -in bidule3.ddns.net.csr -CA rootCA/rootCA.crt -CAkey rootCA/rootCA.key -CAcreateserial -out bidule3.ddns.net.crt -days 730 -sha256
+openssl x509 -in bidule3.ddns.net.crt
+
+sudo cp bidule3.ddns.net.crt /etc/ssl/certs/
+sudo cp bidule3.ddns.net.key /etc/ssl/private/
+# pointer le nouveau certificat clé
+sudo vim /etc/apache2/sites-enabled/ncp.conf
+sudo vim /etc/apache2/sites-enabled/nextcloud.conf
+sudo apachectl graceful
+
 # ensuite:
 #First: Visit https://192.168.0.254/  https://nextcloudpi.local/ (also https://nextcloudpi.lan/ or https://nextcloudpi/ on windows and mac)
 #to activate your instance of NC, and save the auto generated passwords. You may review or reset them
