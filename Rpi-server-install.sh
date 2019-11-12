@@ -94,6 +94,7 @@ sudo make install
 
 # --- rootCA et certificat pour bidule3
 # voir https://stackoverflow.com/questions/991758/how-to-get-pem-file-from-key-and-crt-files 
+# https://gist.github.com/fntlnz/cf14feb5a46b2eda428e000157447309
 # ensuite:
 #First: Visit https://192.168.0.254/  https://nextcloudpi.local/ (also https://nextcloudpi.lan/ or https://nextcloudpi/ on windows and mac)
 #to activate your instance of NC, and save the auto generated passwords. You may review or reset them
