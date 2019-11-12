@@ -86,6 +86,7 @@ chmod 400 Cruzer1-keyfile
 sudo cryptsetup luksAddKey /dev/sda1 /home/pi/Cruzer1-keyfile
 
 # --- Dynamic DNS setup avec noip
+# Ref.: https://my.noip.com/#!/dynamic-dns/duc
 cd /home/pi
 mkdir noip
 cd noip/
