@@ -92,6 +92,30 @@ cd noip-2.1.9-1/
 sudo make
 sudo make install
 
+# Installer le service noip2.service
+cd
+cat > noip2.service <<END
+[Unit]
+Description=No-ip.com dynamic IP address updater
+After=network.target
+After=syslog.target
+[Install]
+WantedBy=multi-user.target
+Alias=noip.service
+[Service]
+# Start main service
+ExecStart=/usr/local/bin/noip2
+Restart=always
+Type=forking
+END
+
+sudo mv noip2.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable noip2
+sudo systemctl start noip2
+systemctl status noip2
+
+
 # --- rootCA et certificat pour bidule3
 # voir https://stackoverflow.com/questions/991758/how-to-get-pem-file-from-key-and-crt-files 
 # https://gist.github.com/fntlnz/cf14feb5a46b2eda428e000157447309
