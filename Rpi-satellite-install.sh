@@ -19,13 +19,16 @@ echo 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCz3ZQTNTh8tEu5l8PFI68ZUw1g/ew5lVaEGV
 
 # --- Restrictions d'accès SSH (si ouvert sur Internet)
 
-# useradd pi-admin ...
+# useradd user ...
+mkdir -p /home/user/.ssh
+cd /home/user/.ssh
+sudo cp /home/pi/.ssh/* .
+sudo chown user:user *
 
 # sudo vim /etc/ssh/sshd_config
-# PasswordAuthentication no
-# KbdInteractive no
-# ajouter AllowUsers user1 user2
-# sudo systemctl restart sshd
+PasswordAuthentication no
+# ajouter AllowUsers user
+sudo systemctl restart sshd
 
 # --- Installation de Webmin
 cd
