@@ -24,6 +24,8 @@ mkdir -p /home/user/.ssh
 cd /home/user/.ssh
 sudo cp /home/pi/.ssh/* .
 sudo chown user:user *
+echo "pi ALL=(ALL) NOPASSWD: ALL" | sudo cat - > /etc/sudoers.d/010_user-nopassword
+
 
 # sudo vim /etc/ssh/sshd_config
 PasswordAuthentication no
