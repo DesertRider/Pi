@@ -155,4 +155,11 @@ sudo apachectl graceful
 # ref: https://bit.ly/2Nm85Pq et https://bit.ly/2CiLXPF
 curl https://get.acme.sh | sh
 
+# --- accès sshfs vers bidule2
+sudo apt-get install -y sshfs
+
+sudo mkdir /bidule2
+sudo chown pi:pi /bidule2
+sshfs serge@bidule2.ddns.net:/media/secure/ -p 65022 /bidule2
+
 # ---
