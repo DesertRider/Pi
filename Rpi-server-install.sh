@@ -63,7 +63,7 @@ sudo mkdir -p /mnt/data
 # retirer ligne de mount de / avec SED
 sudo sed -i -e "/ \/ /d" -e "/\/data/d" /mnt/etc/fstab
 echo "PARTUUID=$PARTUUID1  /        ext4    defaults,noatime  0 1" | sudo tee -a /mnt/etc/fstab
-echo "PARTUUID=$PARTUUID2  /data    xfs     rw,relatime,attr2,inode64,noquota 0 0" | sudo tee -a /mnt/etc/fstab
+echo "PARTUUID=$PARTUUID2  /data    btrfs  rw,relatime,space_cache,subvolid=5,subvol=/ 0 0" | sudo tee -a /mnt/etc/fstab
 # on attends le prochain redémarrage pour monter /data
 
 # --- Préparation du disque /data et shares NFS
