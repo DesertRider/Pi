@@ -12,7 +12,7 @@ sudo apt-get install -y vim bc tree
 
 # Encryption du mot de passe utilisé pour le WIFI (si désiré)
 # remplacer ssid et password par les vrais valeurs
-wpa_passphrase ssid password | sudo tee -a /etc/wpa_supplicant/wpa_supplicant.conf
+wpa_passphrase ssid password | grep -v "#" | sudo tee -a /etc/wpa_supplicant/wpa_supplicant.conf
 
 # --- Setup de la clé ssh
 ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa
