@@ -162,4 +162,14 @@ sudo mkdir /bidule2
 sudo chown pi:pi /bidule2
 sshfs serge@bidule2.ddns.net:/media/secure/ -p 65022 /bidule2
 
-# ---
+# --- Installation de Syncthing
+# Add the release PGP keys:
+curl -s https://syncthing.net/release-key.txt | sudo apt-key add -
+
+# Add the "stable" channel to your APT sources:
+echo "deb https://apt.syncthing.net/ syncthing stable" | sudo tee /etc/apt/sources.list.d/syncthing.list
+
+# Update and install syncthing:
+sudo apt-get update
+sudo apt-get install syncthing
+
