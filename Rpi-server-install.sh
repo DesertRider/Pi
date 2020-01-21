@@ -173,3 +173,11 @@ echo "deb https://apt.syncthing.net/ syncthing stable" | sudo tee /etc/apt/sourc
 sudo apt-get update
 sudo apt-get install syncthing
 
+sudo mkdir -p /opt/syncthing/etc
+sudo adduser --system --group --home /opt/syncthing syncthing
+sudo chown syncthing:syncthing -R /opt/syncthing
+
+wget https://raw.githubusercontent.com/syncthing/syncthing/master/etc/linux-systemd/system/syncthing%40.service
+sudo mv syncthing@.service /etc/systemd/system/syncthing@syncthing.service
+sudo systemctl enable syncthing@syncthing.service
+sudo systemctl start syncthing@syncthing.service
