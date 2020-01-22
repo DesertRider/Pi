@@ -177,8 +177,9 @@ sudo adduser --system --group --home /opt/syncthing syncthing
 sudo mkdir -p /opt/syncthing/etc
 sudo chown syncthing:syncthing -R /opt/syncthing
 
-cd
-sudo wget https://raw.githubusercontent.com/syncthing/syncthing/master/etc/linux-systemd/system/syncthing%40.service
-sudo mv syncthing@.service /etc/systemd/system/syncthing@syncthing.service
+sudo cp /lib/systemd/system/syncthing@.service /etc/systemd/system/syncthing@syncthing.service
 sudo systemctl enable syncthing@syncthing.service
 sudo systemctl start syncthing@syncthing.service
+
+sudo ufw allow syncthing syncthing
+sudo ufw allow syncthing syncthing-gui
