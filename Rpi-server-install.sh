@@ -181,5 +181,5 @@ sudo cp /lib/systemd/system/syncthing@.service /etc/systemd/system/syncthing@syn
 sudo systemctl enable syncthing@syncthing.service
 sudo systemctl start syncthing@syncthing.service
 
-sudo ufw allow syncthing syncthing
-sudo ufw allow syncthing syncthing-gui
+sudo ufw allow syncthing
+sudo ufw allow syncthing-gui
