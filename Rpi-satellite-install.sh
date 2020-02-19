@@ -59,9 +59,6 @@ sudo /etc/init.d/rpimonitor install_auto_package_status_update
 # Configurer au besoin les fichiers dans /etc/rpimonitor/...
 # RPi-Monitor est maintenant accessible sur le port 8888
 
-# --- Installation de xfs pour clé USB
-sudo apt-get install -y xfsprogs
-
 # --- Encryption de la clé USB
 sudo apt-get install -y cryptsetup
 sudo modprobe dm-crypt sha256 aes
@@ -70,29 +67,24 @@ sudo cryptsetup --verify-passphrase luksFormat /dev/sda1 -c aes -s 256 -h sha256
 sudo cryptsetup luksOpen /dev/sda1 securebackup
 sudo mkfs -t ext4 -m 1 /dev/mapper/securebackup
 
-sudo mkdir /media/secure
-sudo mount /dev/mapper/securebackup /media/secure/
-sudo chown pi:pi /media/secure/
+sudo mkdir /securebackup
+sudo mount /dev/mapper/securebackup /securebackup
+sudo chown pi:pi /securebackup/
 
 # Notre clé pour monter la partition automatiquement
 cd /home/pi
-dd if=/dev/urandom of=Cruzer1-keyfile bs=1024 count=4
-chmod 400 Cruzer1-keyfile
-sudo cryptsetup luksAddKey /dev/sda1 /home/pi/Cruzer1-keyfile
+dd if=/dev/urandom of=Seagate1tb-keyfile bs=1024 count=4
+chmod 400 Seagate1tb-keyfile
+sudo cryptsetup luksAddKey /dev/sda1 /home/pi/Seagate1tb-keyfile
 
-
-echo "securebackup   /dev/sda1   /home/pi/Cruzer1-keyfile   luks" | sudo tee -a /etc/crypttab 
-# ou mieux, trouvez le uuid de la partition par la commande
+# On va utiliser le uuid de la partition par la commande
 lsblk -o +uuid,name
 # et ajustez la ligne suivante:
-echo "securebackup   /dev/disk/by-uuid/ee38c998-5e40-4cfd-bdc4-11e1ae954902   /home/pi/Cruzer1-keyfile   luks" | sudo tee -a /etc/crypttab 
+echo "securebackup   /dev/disk/by-uuid/xxxxxxxxxxxxxxxxxxx   /home/pi/Seagate1tb-keyfile   luks" | sudo tee -a /etc/crypttab 
 
-echo "/dev/mapper/securebackup   /media/secure   ext4   defaults,rw   0  0" | sudo tee -a /etc/fstab
+# On ajuste fstab pour monter automatiquement le disque
+echo "/dev/mapper/securebackup   /securebackup   ext4   defaults,rw   0  0" | sudo tee -a /etc/fstab
 
-cd /home/pi
-dd if=/dev/urandom of=Cruzer1-keyfile bs=1024 count=4
-chmod 400 Cruzer1-keyfile
-sudo cryptsetup luksAddKey /dev/sda1 /home/pi/Cruzer1-keyfile
 
 # --- Dynamic DNS setup avec noip
 # Ref.: https://my.noip.com/#!/dynamic-dns/duc
