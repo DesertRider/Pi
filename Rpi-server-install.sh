@@ -175,7 +175,7 @@ sudo apt-get install postfix
 sudo ssed -i 's/relayhost = .*/relayhost = smtp.videotron.ca/g' /etc/postfix/main.cfg
 sudo service postfix restart
 cd
-wget https://github.com/DesertRider/RPI/mail.exp
+wget https://raw.githubusercontent.com/DesertRider/RPI/master/mail.exp
 
 # --- installation du SSD
 cd /home/pi
