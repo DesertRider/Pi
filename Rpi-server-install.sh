@@ -160,26 +160,44 @@ sudo apt-get install -y sshfs
 
 sudo mkdir /bidule2
 sudo chown pi:pi /bidule2
-sshfs serge@bidule2.ddns.net:/media/secure/ -p 65022 /bidule2
+sshfs serge@bidule2.ddns.net:/securebackup/ -p 65022 /bidule2
 
-# --- Installation de Syncthing
-# Add the release PGP keys:
-curl -s https://syncthing.net/release-key.txt | sudo apt-key add -
+# --- installation de openvpn
+# ref: https://www.pivpn.io/ et https://medium.com/@piratelab.io/pivpn-installer-un-vpn-maison-avec-un-raspberry-pi-e71ba47f3e33
+curl -L https://install.pivpn.io | bash
+# On va se créer un certicat client (reste à répondre aux questions)
+pivpn add
+# envoyer le fichier /home/pi/ovpns/serge.ovpn sur les postes qui se connecteront.
 
-# Add the "stable" channel to your APT sources:
-echo "deb https://apt.syncthing.net/ syncthing stable" | sudo tee /etc/apt/sources.list.d/syncthing.list
+# --- installation de Postfix
+sudo apt-get install postfix
+# On configure notre relais smtp = celui de Videotron
+sudo ssed -i 's/relayhost = .*/relayhost = smtp.videotron.ca/g' /etc/postfix/main.cfg
+sudo service postfix restart
+cd
+wget https://github.com/DesertRider/RPI/mail.exp
 
-# Update and install syncthing:
-sudo apt-get update
-sudo apt-get install syncthing
+# --- installation du SSD
+cd /home/pi
+lsblk
+# Retenez le mot de passe demandé à la prochaine étape pour utiliser le même sur bidule2...
+sudo cryptsetup --verify-passphrase luksFormat /dev/sdc1 -c aes -s 256 -h sha256
+sudo cryptsetup luksOpen /dev/sdc1 securebackup
+sudo mkfs -t ext4 -m 1 /dev/mapper/securebackup
+sudo mkdir /securebackup
+sudo mount /dev/mapper/securebackup /securebackup/
+sudo chown pi:pi /securebackup/
+dd if=/dev/urandom of=Seagate1tb-keyfile bs=1024 count=4
+chmod 400 Seagate1tb-keyfile
+sudo cryptsetup luksAddKey /dev/sdc1 /home/pi/Seagate1tb-keyfile
+lsblk -o +uuid,name
+echo "securebackup   /dev/disk/by-uuid/f6dab221-6933-4ef9-a505-7eb02e59cfa9  /home/pi/Seagate1tb-keyfile luks" | sudo tee -a /etc/crypttab
+sudo umount /securebackup
+sudo mount /dev/mapper/securebackup /securebackup/
 
-sudo adduser --system --group --home /opt/syncthing syncthing
-sudo mkdir -p /opt/syncthing/etc
-sudo chown syncthing:syncthing -R /opt/syncthing
+# --- installation du service fstrim (pour TRIM du ssd)
+# ref: https://wiki.debian.org/SSDOptimization
+sudo systemctl enable fstrim.timer
+sudo systemctl start fstrim.timer
 
-sudo cp /lib/systemd/system/syncthing@.service /etc/systemd/system/syncthing@syncthing.service
-sudo systemctl enable syncthing@syncthing.service
-sudo systemctl start syncthing@syncthing.service
 
-sudo ufw allow syncthing
-sudo ufw allow syncthing-gui
