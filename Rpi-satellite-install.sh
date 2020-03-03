@@ -87,6 +87,9 @@ echo "securebackup   /dev/disk/by-uuid/xxxxxxxxxxxxxxxxxxx   /home/pi/Seagate1tb
 # On ajuste fstab pour monter automatiquement le disque
 echo "/dev/mapper/securebackup   /securebackup   ext4   defaults,rw   0  0" | sudo tee -a /etc/fstab
 
+# et on reconfigure le fichier de config de cryptdisk
+sudo sed -i 's,CRYPTDISKS_MOUNT="",CRYPTDISKS_MOUNT="/home/pi/Seagate1tb-keyfile",' /etc/default/cryptdisks
+
 
 # --- Dynamic DNS setup avec noip
 # Ref.: https://my.noip.com/#!/dynamic-dns/duc
