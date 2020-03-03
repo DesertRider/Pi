@@ -59,11 +59,13 @@ sudo /etc/init.d/rpimonitor install_auto_package_status_update
 # Configurer au besoin les fichiers dans /etc/rpimonitor/...
 # RPi-Monitor est maintenant accessible sur le port 8888
 
-# --- Encryption de la clé USB
+# --- Encryption du disque de backups
+# Ref: http://longsteve.com/wiki/index.php/USB_Hard_Drive_Encryption_on_a_Raspberry_Pi
 sudo apt-get install -y cryptsetup
 sudo modprobe dm-crypt sha256 aes
 # Notez bien la passphrase dans la prochaine étape!
 sudo cryptsetup --verify-passphrase luksFormat /dev/sda1 -c aes -s 256 -h sha256
+# ce sera utilisé à cet étape-ci:
 sudo cryptsetup luksOpen /dev/sda1 securebackup
 sudo mkfs -t ext4 -m 1 /dev/mapper/securebackup
 
