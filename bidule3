@@ -73,11 +73,15 @@ sudo bash ./nextcloudpi-install.sh
 
 # --- installation de Postfix
 sudo apt-get install postfix
-# On configure notre relais smtp = celui de Videotron
+# On configure notre relais smtp = celuisudo apt-get install -y expect de Videotron
 sudo sed -i 's/relayhost = .*/relayhost = smtp.videotron.ca/g' /etc/postfix/main.cf
 sudo service postfix restart
 cd
 wget https://raw.githubusercontent.com/DesertRider/RPI/master/mail.exp
+chmod +x mail.exp
+sudo cp mail.exp /usr/local/bin/
+sudo apt-get install -y expect telnet
+# pour tester: mail.exp localhost adresse-from@videotron.ca adresse-to@domaine
 
 # --- installation du service fstrim (pour TRIM du ssd)
 # ref: https://wiki.debian.org/SSDOptimization
