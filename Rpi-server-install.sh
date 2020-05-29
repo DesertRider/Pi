@@ -30,11 +30,11 @@ echo 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCqz35tveThInSFi4ptaMkVKoxHrsxhUDb9xC
 # ajouter AllowUsers user1 user2
 # sudo systemctl restart sshd
 
-# --- Installation de Webmin
-cd
-sudo apt-get install -y perl libnet-ssleay-perl openssl libauthen-pam-perl libpam-runtime libio-pty-perl apt-show-versions python
-wget http://prdownloads.sourceforge.net/webadmin/webmin_1.930_all.deb
-sudo dpkg --install webmin_1.930_all.deb
+## --- Installation de Webmin
+#cd
+#sudo apt-get install -y perl libnet-ssleay-perl openssl libauthen-pam-perl libpam-runtime libio-pty-perl apt-show-versions python
+#wget http://prdownloads.sourceforge.net/webadmin/webmin_1.930_all.deb
+#sudo dpkg --install webmin_1.930_all.deb
 
 # --- Installation NFS Server
 sudo apt-get install nfs-kernel-server -y
@@ -172,7 +172,7 @@ pivpn add
 # --- installation de Postfix
 sudo apt-get install postfix
 # On configure notre relais smtp = celui de Videotron
-sudo ssed -i 's/relayhost = .*/relayhost = smtp.videotron.ca/g' /etc/postfix/main.cfg
+sudo sed -i 's/relayhost = .*/relayhost = smtp.videotron.ca/g' /etc/postfix/main.cfg
 sudo service postfix restart
 cd
 wget https://raw.githubusercontent.com/DesertRider/RPI/master/mail.exp
