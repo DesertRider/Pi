@@ -1,0 +1,86 @@
+# Ajuster hostname, wifi, timezone, ... 
+sudo raspi-config
+sudo reboot
+
+sudo apt-get update -y
+sudo apt-get upgrade -y
+
+# --- Personnalisation de l'installation par défaut
+cat >> ~/.bash_aliases <<END
+alias dir='ls -lah'
+alias ..='cd ..'
+END
+
+source ~/.bashrc
+
+sudo sed -i '/\\e\[5~/s/^# //g' /etc/inputrc
+sudo sed -i '/\\e\[6~/s/^# //g' /etc/inputrc
+bind -f /etc/inputrc
+
+sudo apt-get install -y vim bc tree
+
+# --- Setup de la clé ssh
+ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa
+
+# --- Ajout des clés publiques permises
+echo 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCqz35tveThInSFi4ptaMkVKoxHrsxhUDb9xC6epDuu/3s2hvFPyuw8QOGq06tP5WmHeXgLgatzdHX5LrJ4zb425ExRlGOV85BP5tpgi1d+7bJgD94og4Fq475RjpPc5T5OKC+jYhDf/JMvID+PpDWRpPkaKUYdvmwacH95j7i1XuldUu5nKatIK3b14eWyPhmVdtAmw2C+gncTNSdZG5WM5mMfOEmbDMYcduGlUlKOB5IXp9D+E1Mg8J4gWUA6UEpqoSBjJMvSH5Vu3FlcAy0A2f0a9ckrlNsQ6EtW+8FOEFwamEoiLR8QHbV0Djya7WP7DDww4z2HjLc6mg3MTkxL serge@iMac-de-Serge.local' >> ~/.ssh/authorized_keys
+
+# --- Partionnage et formattage du disque SSD
+# Ne brancher que ce disque pour le moment
+# fdisk créer partition 1 = 16gb, partition 2 = reste
+sudo mkfs -t ext4  -L rootfs /dev/sda1
+sudo mkfs -t btrfs -L data   /dev/sda2
+
+PARTUUID1=$(lsblk -o PARTUUID /dev/sda1 | tail -n1 | awk '{print $1}')
+PARTUUID2=$(lsblk -o PARTUUID /dev/sda2 | tail -n1 | awk '{print $1}')
+
+# --- Identification de la partition boot sur SSD
+# --- Ajuster /boot/cmdline.txt (quirks)
+sudo cp /boot/cmdline.txt /boot/cmdline.txt.sd
+echo "usb-storage.quirks=152d:0578:u console=serial0,115200 console=tty1 root=PARTUUID=$PARTUUID1 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait program_usb_timeout=1" | sudo tee -a /boot/cmdline.txt
+sudo cp /boot/cmdline.txt /boot/cmdline.txt.usb
+
+# --- copier / sur 1ere partition disque ssd
+sudo mount /dev/sda1 /mnt
+sudo rsync -ax / /mnt
+sudo mkdir -p /mnt/data
+
+# retirer ligne de mount de / avec SED
+sudo sed -i -e "/ \/ /d" -e "/\/data/d" /mnt/etc/fstab
+echo "PARTUUID=$PARTUUID1  /        ext4    defaults,noatime  0 1" | sudo tee -a /mnt/etc/fstab
+echo "PARTUUID=$PARTUUID2  /data    btrfs  rw,relatime,space_cache,subvolid=5,subvol=/ 0 0" | sudo tee -a /mnt/etc/fstab
+# on attends le prochain redémarrage pour monter /data
+
+# --- Installation de raspi-backup
+# ref: https://bit.ly/2PNUgem
+curl -sSLO https://www.linux-tips-and-tricks.de/raspiBackupInstallUI.sh && sudo bash ./raspiBackupInstallUI.sh
+# configurer pour utiliser /data/backups comme path de destinations (il créera le sous-répertoire bidule3)
+
+# --- Installation de NextCloudPi
+cd
+curl -sSL https://raw.githubusercontent.com/nextcloud/nextcloudpi/master/install.sh > nextcloudpi-install.sh
+sudo bash ./nextcloudpi-install.sh
+
+
+# ensuite:
+#First: Visit https://192.168.0.XXX/  https://nextcloudpi.local/ (also https://nextcloudpi.lan/ or https://nextcloudpi/ on windows and mac)
+#to activate your instance of NC, and save the auto generated passwords. You may review or reset them
+#anytime by using nc-admin and nc-passwd.
+#Second: Type 'sudo ncp-config' to further configure NCP, or access ncp-web on https://192.168.0.XXX:4443/
+#Note: You will have to add an exception, to bypass your browser warning when you
+#first load the activation and :4443 pages. You can run letsencrypt to get rid of
+#the warning if you have a (sub)domain available.
+
+# --- installation de Postfix
+sudo apt-get install postfix
+# On configure notre relais smtp = celui de Videotron
+sudo sed -i 's/relayhost = .*/relayhost = smtp.videotron.ca/g' /etc/postfix/main.cf
+sudo service postfix restart
+cd
+wget https://raw.githubusercontent.com/DesertRider/RPI/master/mail.exp
+
+# --- installation du service fstrim (pour TRIM du ssd)
+# ref: https://wiki.debian.org/SSDOptimization
+sudo systemctl enable fstrim.timer
+sudo systemctl start fstrim.timer
+
