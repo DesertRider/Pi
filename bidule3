@@ -88,3 +88,9 @@ sudo apt-get install -y expect telnet
 sudo systemctl enable fstrim.timer
 sudo systemctl start fstrim.timer
 
+# --- installation de clamav
+sudo apt-get install -y clamav clamav-daemon
+
+# --- à documenter:
+# - update de lynis
+# - cron running lynis weekly and putting report somewhere...
