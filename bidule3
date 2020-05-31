@@ -92,5 +92,6 @@ sudo systemctl start fstrim.timer
 sudo apt-get install -y clamav clamav-daemon
 
 # --- à documenter:
-# - update de lynis
+# - update de lynis, ref: https://docs.nextcloudpi.com/en/how-to-update-lynis/
 # - cron running lynis weekly and putting report somewhere...
+# - email notifications not working...
