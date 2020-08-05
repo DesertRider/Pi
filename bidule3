@@ -91,6 +91,20 @@ sudo systemctl start fstrim.timer
 # --- installation de clamav
 sudo apt-get install -y clamav clamav-daemon
 
+# --- installation de minidlna server
+sudo apt intall -y minidlna
+sudo sed -i 's;media_dir=.*;media_dir=A,/data/music;' /etc/minidlna.conf
+sudo sed -i 's;#friendly_name=.*;friendly_name=Bidule3-dlna;' /etc/minidlna.conf
+sudo sed -i 's;#inotify=yes;inotify=yes;' /etc/minidlna.conf
+sudo sed -i 's;#inotify_interval=.*;inotify_interval=3600;' /etc/minidlna.conf
+sudo sed -i 's;#db_dir=;db_dir=;' /etc/minidlna.conf
+sudo mkdir /data/music
+sudo chown pi:pi /data/music
+sudo systemctl enable minidlna
+sudo systemctl start minidlna
+# pour démarrer l'indexation
+sudo systemctl force-reload minidlna
+
 # --- à documenter:
 # - update de lynis, ref: https://docs.nextcloudpi.com/en/how-to-update-lynis/
 # - cron running lynis weekly and putting report somewhere...
