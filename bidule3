@@ -92,6 +92,7 @@ sudo systemctl start fstrim.timer
 sudo apt-get install -y clamav clamav-daemon
 
 # --- installation de minidlna server
+# Ref: https://debian-facile.org/doc:reseau:minidlna
 sudo apt intall -y minidlna
 sudo sed -i 's;media_dir=.*;media_dir=A,/data/music;' /etc/minidlna.conf
 sudo sed -i 's;#friendly_name=.*;friendly_name=Bidule3-dlna;' /etc/minidlna.conf
@@ -104,6 +105,7 @@ sudo systemctl enable minidlna
 sudo systemctl start minidlna
 # pour démarrer l'indexation
 sudo systemctl force-reload minidlna
+echo "fs.inotify.max_user_watches = 100000" | sudo tee -a /etc/sysctl.conf
 
 # --- à documenter:
 # - update de lynis, ref: https://docs.nextcloudpi.com/en/how-to-update-lynis/
