@@ -93,6 +93,7 @@ sudo apt-get install -y clamav clamav-daemon
 
 # --- installation de minidlna server
 # Ref: https://debian-facile.org/doc:reseau:minidlna
+# et https://pimylifeup.com/raspberrypi-minidlna/
 sudo apt intall -y minidlna
 sudo sed -i 's;media_dir=.*;media_dir=A,/data/music;' /etc/minidlna.conf
 sudo sed -i 's;#friendly_name=.*;friendly_name=Bidule3-dlna;' /etc/minidlna.conf
