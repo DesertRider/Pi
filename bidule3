@@ -91,7 +91,40 @@ sudo systemctl start fstrim.timer
 # --- installation de clamav
 sudo apt-get install -y clamav clamav-daemon
 
-# --- installation de minidlna server
+# --- serveur Time Machine 
+# ref: https://gregology.net/2018/09/raspberry-pi-time-machine/
+
+sudo mkdir /media/BACKUP/timemachine
+sudo chown pi:pi /media/BACKUP/timemachine
+sudo apt-get install netatalk -y
+sudo vim /etc/nsswitch.conf
+# ajouter "dns mdns4 mdns" à la ligne débutant par "hosts:"
+
+cat >/tmp/afp.conf <<FIN
+[Global]
+;  mimic model = TimeCapsule6,106
+
+[Time Machine]
+  path = /media/BACKUP/timemachine
+  time machine = yes
+FIN
+sudo mv /tmp/afp.conf /etc/netatalk/afp.conf
+# (la ligne mimic model ne semble pas correcte et doit être commentée)
+
+sudo mkdir -p /var/lock/netatalk
+sudo service avahi-daemon start
+sudo service netatalk start
+
+# --- setup de CUPS (à faire)
+
+# --- export NFS pour partage de musique
+sudo mkdir /data/music
+sudo chown pi:pi /data/music
+echo "/data/music        192.168.0.252(ro,all_squash,insecure,async,no_subtree_check,anonuid=1000,anongid=1000)" | sudo tee /etc/exports
+sudo exportfs -ra
+# sur le Mac, faire un rsync entre le répertoire iTunes et bidule3.local:/data/music
+
+# --- installation de minidlna server - DÉSACTIVÉ, n'est pas employé par volumio
 # Ref: https://debian-facile.org/doc:reseau:minidlna
 # et https://pimylifeup.com/raspberrypi-minidlna/
 sudo apt intall -y minidlna
@@ -112,3 +145,5 @@ echo "fs.inotify.max_user_watches = 100000" | sudo tee -a /etc/sysctl.conf
 # - update de lynis, ref: https://docs.nextcloudpi.com/en/how-to-update-lynis/
 # - cron running lynis weekly and putting report somewhere...
 # - email notifications not working...
+
+
