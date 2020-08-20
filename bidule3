@@ -91,7 +91,7 @@ sudo systemctl start fstrim.timer
 # --- installation de clamav
 sudo apt-get install -y clamav clamav-daemon
 
-# --- serveur Time Machine 
+# --- Setup du serveur Time Machine 
 # ref: https://gregology.net/2018/09/raspberry-pi-time-machine/
 
 sudo mkdir /media/BACKUP/timemachine
@@ -114,6 +114,8 @@ sudo mv /tmp/afp.conf /etc/netatalk/afp.conf
 sudo mkdir -p /var/lock/netatalk
 sudo service avahi-daemon start
 sudo service netatalk start
+# on ouvre le port 458 du firewall
+sudo ufw allow afpovertcp
 
 # --- setup de CUPS (à faire)
 
@@ -123,6 +125,20 @@ sudo chown pi:pi /data/music
 echo "/data/music        192.168.0.252(ro,all_squash,insecure,async,no_subtree_check,anonuid=1000,anongid=1000)" | sudo tee /etc/exports
 sudo exportfs -ra
 # sur le Mac, faire un rsync entre le répertoire iTunes et bidule3.local:/data/music
+
+# --- Installation de RPi-Monitor
+# ref: https://xavierberger.github.io/RPi-Monitor-docs/11_installation.html
+sudo apt-get install dirmngr
+sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 2C0D3C0F
+sudo wget http://goo.gl/vewCLL -O /etc/apt/sources.list.d/rpimonitor.list
+sudo apt-get update
+sudo apt-get install rpimonitor
+# rpimonitor va écouter sur le port 8888
+sudo ufw allow 8888/tcp
+# tel qu'affiché on va lancer un update
+sudo /etc/init.d/rpimonitor update
+# et permettre l'autoexécution des updates
+sudo /etc/init.d/rpimonitor install_auto_package_status_update
 
 # --- installation de minidlna server - DÉSACTIVÉ, n'est pas employé par volumio
 # Ref: https://debian-facile.org/doc:reseau:minidlna
