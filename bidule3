@@ -73,7 +73,7 @@ sudo bash ./nextcloudpi-install.sh
 
 # --- installation de Postfix
 sudo apt-get install postfix
-# On configure notre relais smtp = celuisudo apt-get install -y expect de Videotron
+# On configure notre relais smtp = celui de Videotron
 sudo sed -i 's/relayhost = .*/relayhost = smtp.videotron.ca/g' /etc/postfix/main.cf
 sudo service postfix restart
 cd
@@ -102,7 +102,7 @@ sudo vim /etc/nsswitch.conf
 
 cat >/tmp/afp.conf <<FIN
 [Global]
-;  mimic model = TimeCapsule6,106
+  mimic model = TimeCapsule6,106
 
 [Time Machine]
   path = /media/BACKUP/timemachine
@@ -139,20 +139,6 @@ sudo ufw allow 8888/tcp
 sudo /etc/init.d/rpimonitor update
 # et permettre l'autoexécution des updates
 sudo /etc/init.d/rpimonitor install_auto_package_status_update
-
-# --- Installation de Postfix
-# ref: https://raspberrytips.com/mail-server-raspberry-pi/
-sudo apt-get install postfix
-sudo vim /etc/postfix/main.cf
-# remplacer
-inet_protocols = all
-# par 
-inet_protocols = ipv4
-# et configurer
-myhostname =  bidule3.ddns.net
-relayhost = smtp.videotron.ca
-
-sudo systemctl restart postfix
 
 # --- installation de minidlna server - DÉSACTIVÉ, n'est pas employé par volumio
 # Ref: https://debian-facile.org/doc:reseau:minidlna
