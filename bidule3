@@ -140,6 +140,20 @@ sudo /etc/init.d/rpimonitor update
 # et permettre l'autoexécution des updates
 sudo /etc/init.d/rpimonitor install_auto_package_status_update
 
+# --- Installation de Postfix
+# ref: https://raspberrytips.com/mail-server-raspberry-pi/
+sudo apt-get install postfix
+sudo vim /etc/postfix/main.cf
+# remplacer
+inet_protocols = all
+# par 
+inet_protocols = ipv4
+# et configurer
+myhostname =  bidule3.ddns.net
+relayhost = smtp.videotron.ca
+
+sudo systemctl restart postfix
+
 # --- installation de minidlna server - DÉSACTIVÉ, n'est pas employé par volumio
 # Ref: https://debian-facile.org/doc:reseau:minidlna
 # et https://pimylifeup.com/raspberrypi-minidlna/
