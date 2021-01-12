@@ -9,7 +9,14 @@ sudo apt-get upgrade -y
 cat >> ~/.bash_aliases <<END
 alias dir='ls -lah'
 alias ..='cd ..'
+export PROMPT_COMMAND='history -a'
 END
+
+# formattage du datetime dans le history
+cat >> /tmp/history.sh <<FIN
+HISTTIMEFORMAT=\${HISTTIMEFORMAT:-"%F %H:%M:%S "}
+FIN
+sudo mv /tmp/history.sh /etc/profile.d
 
 source ~/.bashrc
 
