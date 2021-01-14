@@ -166,14 +166,14 @@ echo "fs.inotify.max_user_watches = 100000" | sudo tee -a /etc/sysctl.conf
 
 # --- Installation de squid
 # Réf.: https://linuxize.com/post/how-to-install-and-configure-squid-proxy-on-ubuntu-18-04/
+# et https://medium.com/@bindassbasanta/squid-proxy-cache-using-raspberry-pi-diy-45720395ae21
 sudo apt-get update
 sudo apt-get install -y squid
 sudo ufw allow squid
-cd /etc/squid
-sudo cp squid.conf squid.conf.ori
-sudo sed -i 's/^#http_access allow localnet/http_access allow localnet/g' squid.conf
-sudo sed -i 's/^# dns_v4_first off/dns_v4_first on/g' squid.conf
-sudo sed -i 's/^# access_log.*/access_log stdio:\/var\/log\/squid\/access.log squid/g' squid.conf
+sudo cp /etc/squid/squid.conf{,.orginal}
+sudo sed -i 's/^#http_access allow localnet/http_access allow localnet/g' /etc/squid/squid.conf
+sudo sed -i 's/^# dns_v4_first off/dns_v4_first on/g' /etc/squid/squid.conf
+sudo sed -i 's/^# access_log.*/access_log stdio:\/var\/log\/squid\/access.log squid/g' /etc/squid/squid.conf
 
 # --- à documenter:
 # - update de lynis, ref: https://docs.nextcloudpi.com/en/how-to-update-lynis/
