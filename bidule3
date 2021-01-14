@@ -165,6 +165,7 @@ sudo systemctl force-reload minidlna
 echo "fs.inotify.max_user_watches = 100000" | sudo tee -a /etc/sysctl.conf
 
 # --- Installation de squid
+# Réf.: https://linuxize.com/post/how-to-install-and-configure-squid-proxy-on-ubuntu-18-04/
 sudo apt-get update
 sudo apt-get install -y squid
 sudo ufw allow squid
