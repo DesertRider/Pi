@@ -176,6 +176,12 @@ sudo sed -i 's/^# dns_v4_first off/dns_v4_first on/g' /etc/squid/squid.conf
 sudo sed -i -e '/^#logformat squid /alogformat squid-serge      %{%Y/%m/%d:%H:%M:%S %z}tl.%03tu %6tr %>a %Ss/%03>Hs %<st %rm %ru %[un %Sh/%<a %mt' /etc/squid/squid.conf
 sudo sed -i 's/^# access_log.*/access_log stdio:\/var\/log\/squid\/access.log squid-serge/g' /etc/squid/squid.conf
 
+# --- Installation d'Ansible
+# Réf.: https://www.theurbanpenguin.com/installing-ansible-on-the-raspberry-pi/
+sudo apt install -y ansible sshpass
+# (à compléter...)
+# Utiliser ansible à l'avenir pour le setup des diverses composantes du pi
+
 # --- à documenter:
 # - update de lynis, ref: https://docs.nextcloudpi.com/en/how-to-update-lynis/
 # - cron running lynis weekly and putting report somewhere...
