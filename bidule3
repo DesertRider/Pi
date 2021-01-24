@@ -136,14 +136,18 @@ sudo mv /etc/cups-pdf.conf /etc/cups-pdf.ori
 sudo cp /etc/cups/cups-pdf.conf.ori /etc/cups/cups-pdf-dropbox.conf
 sudo sed -i -e 's,^\(Out \),#\1,' -e '/^#Out /a Out \/var\/spool\/cups-pdf\/dropbox' cups-pdf-dropbox.conf
 sudo sed -i -e 's,^\(AnonDirName \),#\1,' -e '/^#AnonDirName /a AnonDirName \/var\/spool\/cups-pdf\/dropbox' cups-pdf-dropbox.conf
-mkdir -p /var/spool/cups-pdf/dropbox
+sudo mkdir -p /var/spool/cups-pdf/dropbox
+sudo chown :lpadmin /var/spool/cups-pdf/dropbox
+chmod g+rwx /var/spool/cups-pdf/dropbox
 # Pour Nextcloud
 sudo cp /etc/cups/cups-pdf.conf.ori /etc/cups/cups-pdf-nextcloud.conf
 sudo sed -i -e 's,^\(Out \),#\1,' -e '/^#Out /a Out \/var\/spool\/cups-pdf\/nextcloud' cups-pdf-nextcloud.conf
 sudo sed -i -e 's,^\(AnonDirName \),#\1,' -e '/^#AnonDirName /a AnonDirName \/var\/spool\/cups-pdf\/nextcloud' cups-pdf-nextcloud.conf
-mkdir -p /var/spool/cups-pdf/nextcloud
-
+sudo mkdir -p /var/spool/cups-pdf/nextcloud
+sudo chown :lpadmin /var/spool/cups-pdf/nextcloud
+chmod g+rwx /var/spool/cups-pdf/nextcloud
 sudo systemctl restart cups
+
 # accéder à https://bidule3.local:63/admin et ajouter les imprimantes virtuelles PDF désirées
 # Administration - Ajouter une imprimante
 #    - imprimante locale CUPS-PDF
