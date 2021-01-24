@@ -172,9 +172,13 @@ dropbox_uploader.sh
 # Ref: https://www.howtoforge.com/tutorial/trigger-commands-on-file-or-directory-changes-with-incron/
 sudo apt-get install -y incron
 echo "root" | sudo tee -a /etc/incron.allow
-echo '/var/spool/cups-pdf/dropbox/   IN_CLOSE_WRITE  /usr/local/bin/dropbox-uploader.sh $@$# /' | sudo tee -a /etc/cron
+sudo incrontab -e
+# saisir cet information dan incrontab
+/var/spool/cups-pdf/dropbox/   IN_CLOSE_WRITE  /usr/local/bin/cups-pdf-to-dropbox.sh $@$#
+# à faire: montrer comment cups-pdf-to-dropbox.sh est fait
 
-
+# à faire pour Nextcloud: script de déplacement
+# et montrer le script 
 # --- 
 
 # --- export NFS pour partage de musique
