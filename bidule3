@@ -124,7 +124,54 @@ sudo service netatalk start
 # on ouvre le port 458 du firewall
 sudo ufw allow afpovertcp
 
-# --- setup de CUPS (à faire)
+# --- setup de CUPS et cups-pdf pour imprimantes et PDF printer pour DropBox
+# 1ere partie: CUPS
+# Ref: https://pimylifeup.com/raspberry-pi-airprint/
+#   et https://linuxwin.com/cups-airprint-on-raspberry-pi/
+sudo apt-get update
+sudo apt-get install -y cups cups-pdf
+
+sudo mv /etc/cups-pdf.conf /etc/cups-pdf.ori
+# Pour Dropbox
+sudo cp /etc/cups/cups-pdf.conf.ori /etc/cups/cups-pdf-dropbox.conf
+sudo sed -i -e 's,^\(Out \),#\1,' -e '/^#Out /a Out \/var\/spool\/cups-pdf\/dropbox' cups-pdf-dropbox.conf
+sudo sed -i -e 's,^\(AnonDirName \),#\1,' -e '/^#AnonDirName /a AnonDirName \/var\/spool\/cups-pdf\/dropbox' cups-pdf-dropbox.conf
+mkdir -p /var/spool/cups-pdf/dropbox
+# Pour Nextcloud
+sudo cp /etc/cups/cups-pdf.conf.ori /etc/cups/cups-pdf-nextcloud.conf
+sudo sed -i -e 's,^\(Out \),#\1,' -e '/^#Out /a Out \/var\/spool\/cups-pdf\/nextcloud' cups-pdf-nextcloud.conf
+sudo sed -i -e 's,^\(AnonDirName \),#\1,' -e '/^#AnonDirName /a AnonDirName \/var\/spool\/cups-pdf\/nextcloud' cups-pdf-nextcloud.conf
+mkdir -p /var/spool/cups-pdf/nextcloud
+
+sudo systemctl restart cups
+# accéder à https://bidule3.local:63/admin et ajouter les imprimantes virtuelles PDF désirées
+# Administration - Ajouter une imprimante
+#    - imprimante locale CUPS-PDF
+#    - donner un nom qui sera utilisé par le script pour rediriger le fichier PDF plus tard
+#    - description: ceci sera visible pour les utilisateurs
+#    - cocher Partager cette imprimante
+#    - comme marque, choisir Generic - Generic CUPS-PDF Printer W/ options)
+
+# 2e partie: Dropbox uploader
+# Ref: https://github.com/andreafabrizi/Dropbox-Uploader
+cd
+curl "https://raw.githubusercontent.com/andreafabrizi/Dropbox-Uploader/master/dropbox_uploader.sh" -o dropbox_uploader.sh
+chmod +x dropbox_uploader.sh
+sudo mv dropbox_uploader.sh /usr/local/bin/
+
+# Suivre les instructions à l'écran pour la création de l'application Dropbox et la configuration des credentials
+# (ici le nom de l'application sera PDF-Bidule3
+dropbox_uploader.sh
+# Dropbox va créer un répertoire /Applications/PDF-Bidule3 et les fichiers y seront déposés
+
+# 3e partie: Utilisation de incrontab pour déplacer les fichiers générés par cups-pdf vers la bonne destination
+# Ref: https://www.howtoforge.com/tutorial/trigger-commands-on-file-or-directory-changes-with-incron/
+sudo apt-get install -y incron
+echo "root" | sudo tee -a /etc/incron.allow
+
+
+
+# --- 
 
 # --- export NFS pour partage de musique
 sudo mkdir /data/music
