@@ -138,14 +138,14 @@ sudo sed -i -e 's,^\(Out \),#\1,' -e '/^#Out /a Out \/var\/spool\/cups-pdf\/drop
 sudo sed -i -e 's,^\(AnonDirName \),#\1,' -e '/^#AnonDirName /a AnonDirName \/var\/spool\/cups-pdf\/dropbox' cups-pdf-dropbox.conf
 sudo mkdir -p /var/spool/cups-pdf/dropbox
 sudo chown :lpadmin /var/spool/cups-pdf/dropbox
-chmod g+rwx /var/spool/cups-pdf/dropbox
+chmod 777 /var/spool/cups-pdf/dropbox
 # Pour Nextcloud
 sudo cp /etc/cups/cups-pdf.conf.ori /etc/cups/cups-pdf-nextcloud.conf
 sudo sed -i -e 's,^\(Out \),#\1,' -e '/^#Out /a Out \/var\/spool\/cups-pdf\/nextcloud' cups-pdf-nextcloud.conf
 sudo sed -i -e 's,^\(AnonDirName \),#\1,' -e '/^#AnonDirName /a AnonDirName \/var\/spool\/cups-pdf\/nextcloud' cups-pdf-nextcloud.conf
 sudo mkdir -p /var/spool/cups-pdf/nextcloud
 sudo chown :lpadmin /var/spool/cups-pdf/nextcloud
-chmod g+rwx /var/spool/cups-pdf/nextcloud
+chmod 777 /var/spool/cups-pdf/nextcloud
 sudo systemctl restart cups
 
 # accéder à https://bidule3.local:63/admin et ajouter les imprimantes virtuelles PDF désirées
@@ -172,7 +172,7 @@ dropbox_uploader.sh
 # Ref: https://www.howtoforge.com/tutorial/trigger-commands-on-file-or-directory-changes-with-incron/
 sudo apt-get install -y incron
 echo "root" | sudo tee -a /etc/incron.allow
-
+echo '/var/spool/cups-pdf/dropbox/   IN_CLOSE_WRITE  /usr/local/bin/dropbox-uploader.sh $@$# /' | sudo tee -a /etc/cron
 
 
 # --- 
