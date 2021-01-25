@@ -58,6 +58,10 @@ echo "PARTUUID=$PARTUUID1  /        ext4    defaults,noatime  0 1" | sudo tee -a
 echo "PARTUUID=$PARTUUID2  /data    btrfs  rw,relatime,space_cache,subvolid=5,subvol=/ 0 0" | sudo tee -a /mnt/etc/fstab
 # on attends le prochain redémarrage pour monter /data
 
+# --- désactiver log2ram car on a maintenant un disque pour gérer /var/log
+sudo systemctl disable log2ram.service
+# will need to reboot...
+
 # --- Installation de raspi-backup
 # ref: https://bit.ly/2PNUgem
 curl -sSLO https://www.linux-tips-and-tricks.de/raspiBackupInstallUI.sh && sudo bash ./raspiBackupInstallUI.sh
