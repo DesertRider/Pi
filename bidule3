@@ -235,6 +235,11 @@ sudo sed -i 's/^# dns_v4_first off/dns_v4_first on/g' /etc/squid/squid.conf
 sudo sed -i -e '/^#logformat squid /alogformat squid-serge      %{%Y/%m/%d:%H:%M:%S %z}tl.%03tu %6tr %>a %Ss/%03>Hs %<st %rm %ru %[un %Sh/%<a %mt' /etc/squid/squid.conf
 sudo sed -i 's/^# access_log.*/access_log stdio:\/var\/log\/squid\/access.log squid-serge/g' /etc/squid/squid.conf
 
+# --- Installation de logwatch
+# Réf.: https://www.vpsbasics.com/os/how-to-monitor-system-log-files-in-centos-using-logwatch/
+sudo apt-get update
+sudo apt-get install -y logwatch
+
 # --- Installation d'Ansible
 # Réf.: https://www.theurbanpenguin.com/installing-ansible-on-the-raspberry-pi/
 sudo apt install -y ansible sshpass
