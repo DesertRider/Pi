@@ -104,6 +104,7 @@ sudo apt-get install -y clamav clamav-daemon
 
 # --- Setup du serveur Time Machine 
 # ref: https://gregology.net/2018/09/raspberry-pi-time-machine/
+# et pour Time Machine pour Big Sur: https://eclecticlight.co/2020/06/29/apfs-changes-in-big-sur-how-time-machine-backs-up-to-apfs-and-more/
 
 sudo mkdir /media/BACKUP/timemachine
 sudo chown pi:pi /media/BACKUP/timemachine
