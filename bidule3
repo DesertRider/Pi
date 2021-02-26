@@ -224,7 +224,7 @@ sudo systemctl start minidlna
 sudo systemctl force-reload minidlna
 echo "fs.inotify.max_user_watches = 100000" | sudo tee -a /etc/sysctl.conf
 
-# --- Installation de squid
+# --- Installation de squid - DÉSACTIVÉ, n'est plus employé
 # Réf.: https://linuxize.com/post/how-to-install-and-configure-squid-proxy-on-ubuntu-18-04/
 # et https://medium.com/@bindassbasanta/squid-proxy-cache-using-raspberry-pi-diy-45720395ae21
 sudo apt-get update
@@ -235,6 +235,52 @@ sudo sed -i 's/^#http_access allow localnet/http_access allow localnet/g' /etc/s
 sudo sed -i 's/^# dns_v4_first off/dns_v4_first on/g' /etc/squid/squid.conf
 sudo sed -i -e '/^#logformat squid /alogformat squid-serge      %{%Y/%m/%d:%H:%M:%S %z}tl.%03tu %6tr %>a %Ss/%03>Hs %<st %rm %ru %[un %Sh/%<a %mt' /etc/squid/squid.conf
 sudo sed -i 's/^# access_log.*/access_log stdio:\/var\/log\/squid\/access.log squid-serge/g' /etc/squid/squid.conf
+
+# --- Installation de Wiki.js
+# Réf.: https://docs.requarks.io/install/linux
+sudo mysql
+create database wiki;
+# ajuster user et password
+create user 'user'@'%' IDENTIFIED by 'password';
+grant all on wiki.* to 'user'@'%';
+exit;
+# 
+sudo groupadd --system wiki
+sudo useradd -s /sbin/nologin --system -g wiki wiki
+cd /var
+sudo wget https://github.com/Requarks/wiki/releases/download/2.5.170/wiki-js.tar.gz
+sudo mkdir wikijs
+sudo tar xzf wiki-js.tar.gz -C wikijs
+sudo rm wiki-js.tar.gz
+sudo chown -R wiki:wiki wikijs
+cd wikijs
+sudo cp config.sample.yml config.yml
+sudo vim config.yml
+# spécifier mariadb comme bd, et 127.0.0.1 comme adresse
+# spécifier le bon user/password pour la bd
+cat > /tmp/wikisj.tmp <<FIN
+[Unit]
+Description=Wiki.js
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/node server
+Restart=always
+# Consider creating a dedicated user for Wiki.js here:
+User=wiki
+Environment=NODE_ENV=production
+WorkingDirectory=/var/wiki
+
+[Install]
+WantedBy=multi-user.target
+FIN
+
+sudo mv /tmp/wikijs.tmp /etc/systemd/system/wikijs.service
+sudo systemctl daemon reload
+sudo systemctl enable wikijs.service
+sudo systemctl start wikijs.service
+
 
 # --- Installation de logwatch
 # Réf.: https://www.vpsbasics.com/os/how-to-monitor-system-log-files-in-centos-using-logwatch/
