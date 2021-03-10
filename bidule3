@@ -62,6 +62,12 @@ echo "PARTUUID=$PARTUUID2  /data    btrfs  rw,relatime,space_cache,subvolid=5,su
 sudo systemctl disable log2ram.service
 # will need to reboot...
 
+# --- désactivation de IPv6
+# Réf.: https://www.howtoraspberry.com/2020/04/disable-ipv6-on-raspberry-pi/
+sudo cp -p /boot/cmdline.txt /boot/cmdline.txt.ipv6
+sed 's/$/ ipv6.disable/' /boot/cmdline.txt > /tmp/cmdline.txt
+sudo mv /tmp/cmdline.txt /boot/
+
 # --- Installation de raspi-backup
 # ref: https://bit.ly/2PNUgem
 curl -sSLO https://www.linux-tips-and-tricks.de/raspiBackupInstallUI.sh && sudo bash ./raspiBackupInstallUI.sh
