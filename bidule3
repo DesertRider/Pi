@@ -241,6 +241,10 @@ sudo sed -i 's/^#http_access allow localnet/http_access allow localnet/g' /etc/s
 sudo sed -i 's/^# dns_v4_first off/dns_v4_first on/g' /etc/squid/squid.conf
 sudo sed -i -e '/^#logformat squid /alogformat squid-serge      %{%Y/%m/%d:%H:%M:%S %z}tl.%03tu %6tr %>a %Ss/%03>Hs %<st %rm %ru %[un %Sh/%<a %mt' /etc/squid/squid.conf
 sudo sed -i 's/^# access_log.*/access_log stdio:\/var\/log\/squid\/access.log squid-serge/g' /etc/squid/squid.conf
+sudo mkdir /var/log/squid
+sudo chown proxy:proxy /var/log/squid
+sudo systemctl enable squid
+sudo systemctl start squid
 
 # --- Installation de Wiki.js
 # Réf.: https://docs.requarks.io/install/linux
