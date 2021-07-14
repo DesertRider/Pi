@@ -235,7 +235,7 @@ echo "fs.inotify.max_user_watches = 100000" | sudo tee -a /etc/sysctl.conf
 # et https://medium.com/@bindassbasanta/squid-proxy-cache-using-raspberry-pi-diy-45720395ae21
 sudo apt-get update
 sudo apt-get install -y squid
-sudo ufw allow squid
+sudo ufw allow 3128/tcp
 sudo cp /etc/squid/squid.conf{,.orginal}
 sudo sed -i 's/^#http_access allow localnet/http_access allow localnet/g' /etc/squid/squid.conf
 sudo sed -i 's/^# dns_v4_first off/dns_v4_first on/g' /etc/squid/squid.conf
