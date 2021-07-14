@@ -230,7 +230,7 @@ sudo systemctl start minidlna
 sudo systemctl force-reload minidlna
 echo "fs.inotify.max_user_watches = 100000" | sudo tee -a /etc/sysctl.conf
 
-# --- Installation de squid - DÉSACTIVÉ, n'est plus employé
+# --- Installation de squid
 # Réf.: https://linuxize.com/post/how-to-install-and-configure-squid-proxy-on-ubuntu-18-04/
 # et https://medium.com/@bindassbasanta/squid-proxy-cache-using-raspberry-pi-diy-45720395ae21
 sudo apt-get update
@@ -245,6 +245,18 @@ sudo mkdir /var/log/squid
 sudo chown proxy:proxy /var/log/squid
 sudo systemctl enable squid
 sudo systemctl start squid
+
+# --- Installation de dnsmasq
+# Réf.: https://pimylifeup.com/raspberry-pi-dns-server/
+sudo apt-get update
+sudo apt-get install -y dnsmasq
+sudo sed -i 's/^#port=5353/port=5353/g' /etc/dnsmasq.conf
+sudo sed -i 's/^#domain-needed/domain-needed/g' /etc/dnsmasq.conf
+sudo sed -i 's/^#bogus-priv/bogus-priv/g' /etc/dnsmasq.conf
+sudo sed -i 's/^#no-resolv/no-resolv/g' /etc/dnsmasq.conf
+sudo sed -i 's,#local=/localnet/,local=/local/,g' /etc/dnsmasq.conf
+sudo systemctl enable dnsmasq
+sudo systemctl start dnsmasq
 
 # --- Installation de Wiki.js
 # Réf.: https://docs.requarks.io/install/linux
