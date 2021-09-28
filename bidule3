@@ -73,6 +73,9 @@ sudo mv /tmp/cmdline.txt /boot/
 curl -sSLO https://www.linux-tips-and-tricks.de/raspiBackupInstallUI.sh && sudo bash ./raspiBackupInstallUI.sh
 # configurer pour utiliser /data/backups comme path de destinations (il créera le sous-répertoire bidule3)
 
+# --- Installation de Borg
+sudo apt install -y borgbackup
+
 # --- Installation de NextCloudPi
 cd
 curl -sSL https://raw.githubusercontent.com/nextcloud/nextcloudpi/master/install.sh > nextcloudpi-install.sh
